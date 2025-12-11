@@ -1,0 +1,28 @@
+name: Flutter Web Deploy
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.19.x' # Sizin kullandığınız kararlı bir sürüm olmalı
+
+      - run: flutter pub get
+      - run: flutter build web --base-href / # Kök dizin için derle
+
+      - name: Deploy to GitHub Pages
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          branch: gh-pages # Bu daldan yayın yapacağız
+          folder: build/web
+          clean: true
+
